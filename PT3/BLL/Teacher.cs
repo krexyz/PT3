@@ -5,11 +5,9 @@ using System.Web;
 
 namespace PT3.BLL
 {
-    public class Student
+    public class Teacher : User
     {
         string name;
-        int classID;
-
-
+        int userID;
     }
 }
