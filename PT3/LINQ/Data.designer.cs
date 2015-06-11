@@ -821,9 +821,9 @@ namespace PT3.LINQ
 		
 		private System.Nullable<int> _questionMarks;
 		
-		private EntityRef<testquestion> _testquestions;
-		
 		private EntityRef<objectiveanswer> _objectiveanswers;
+		
+		private EntityRef<testquestion> _testquestion;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -843,8 +843,8 @@ namespace PT3.LINQ
 		
 		public question()
 		{
-			this._testquestions = default(EntityRef<testquestion>);
 			this._objectiveanswers = default(EntityRef<objectiveanswer>);
+			this._testquestion = default(EntityRef<testquestion>);
 			OnCreated();
 		}
 		
@@ -859,6 +859,10 @@ namespace PT3.LINQ
 			{
 				if ((this._questionID != value))
 				{
+					if (this._testquestion.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
 					this.OnquestionIDChanging(value);
 					this.SendPropertyChanging();
 					this._questionID = value;
@@ -948,35 +952,6 @@ namespace PT3.LINQ
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="question_testquestion", Storage="_testquestions", ThisKey="questionID", OtherKey="questionID", IsUnique=true, IsForeignKey=false)]
-		public testquestion testquestions
-		{
-			get
-			{
-				return this._testquestions.Entity;
-			}
-			set
-			{
-				testquestion previousValue = this._testquestions.Entity;
-				if (((previousValue != value) 
-							|| (this._testquestions.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._testquestions.Entity = null;
-						previousValue.question = null;
-					}
-					this._testquestions.Entity = value;
-					if ((value != null))
-					{
-						value.question = this;
-					}
-					this.SendPropertyChanged("testquestions");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="question_objectiveanswer", Storage="_objectiveanswers", ThisKey="questionID", OtherKey="questionID", IsUnique=true, IsForeignKey=false)]
 		public objectiveanswer objectiveanswers
 		{
@@ -1002,6 +977,40 @@ namespace PT3.LINQ
 						value.question = this;
 					}
 					this.SendPropertyChanged("objectiveanswers");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="testquestion_question", Storage="_testquestion", ThisKey="questionID", OtherKey="questionID", IsForeignKey=true)]
+		public testquestion testquestion
+		{
+			get
+			{
+				return this._testquestion.Entity;
+			}
+			set
+			{
+				testquestion previousValue = this._testquestion.Entity;
+				if (((previousValue != value) 
+							|| (this._testquestion.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._testquestion.Entity = null;
+						previousValue.questions = null;
+					}
+					this._testquestion.Entity = value;
+					if ((value != null))
+					{
+						value.questions = this;
+						this._questionID = value.questionID;
+					}
+					else
+					{
+						this._questionID = default(int);
+					}
+					this.SendPropertyChanged("testquestion");
 				}
 			}
 		}
@@ -1037,7 +1046,7 @@ namespace PT3.LINQ
 		
 		private int _questionID;
 		
-		private EntityRef<question> _question;
+		private EntityRef<question> _questions;
 		
 		private EntityRef<test> _test;
 		
@@ -1053,7 +1062,7 @@ namespace PT3.LINQ
 		
 		public testquestion()
 		{
-			this._question = default(EntityRef<question>);
+			this._questions = default(EntityRef<question>);
 			this._test = default(EntityRef<test>);
 			OnCreated();
 		}
@@ -1093,10 +1102,6 @@ namespace PT3.LINQ
 			{
 				if ((this._questionID != value))
 				{
-					if (this._question.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
 					this.OnquestionIDChanging(value);
 					this.SendPropertyChanging();
 					this._questionID = value;
@@ -1106,36 +1111,31 @@ namespace PT3.LINQ
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="question_testquestion", Storage="_question", ThisKey="questionID", OtherKey="questionID", IsForeignKey=true)]
-		public question question
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="testquestion_question", Storage="_questions", ThisKey="questionID", OtherKey="questionID", IsUnique=true, IsForeignKey=false)]
+		public question questions
 		{
 			get
 			{
-				return this._question.Entity;
+				return this._questions.Entity;
 			}
 			set
 			{
-				question previousValue = this._question.Entity;
+				question previousValue = this._questions.Entity;
 				if (((previousValue != value) 
-							|| (this._question.HasLoadedOrAssignedValue == false)))
+							|| (this._questions.HasLoadedOrAssignedValue == false)))
 				{
 					this.SendPropertyChanging();
 					if ((previousValue != null))
 					{
-						this._question.Entity = null;
-						previousValue.testquestions = null;
+						this._questions.Entity = null;
+						previousValue.testquestion = null;
 					}
-					this._question.Entity = value;
+					this._questions.Entity = value;
 					if ((value != null))
 					{
-						value.testquestions = this;
-						this._questionID = value.questionID;
+						value.testquestion = this;
 					}
-					else
-					{
-						this._questionID = default(int);
-					}
-					this.SendPropertyChanged("question");
+					this.SendPropertyChanged("questions");
 				}
 			}
 		}

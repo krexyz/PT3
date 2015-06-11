@@ -46,15 +46,15 @@
       <Column Name="questionText" Type="System.String" DbType="NVarChar(300)" CanBeNull="true" />
       <Column Name="questionAnswer" Type="System.String" DbType="NVarChar(64)" CanBeNull="true" />
       <Column Name="questionMarks" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="question_testquestion" Member="testquestions" ThisKey="questionID" OtherKey="questionID" Type="testquestion" Cardinality="One" />
       <Association Name="question_objectiveanswer" Member="objectiveanswers" ThisKey="questionID" OtherKey="questionID" Type="objectiveanswer" Cardinality="One" />
+      <Association Name="testquestion_question" Member="testquestion" ThisKey="questionID" OtherKey="questionID" Type="testquestion" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.testquestion" Member="testquestions">
     <Type Name="testquestion">
       <Column Name="testID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="questionID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="question_testquestion" Member="question" ThisKey="questionID" OtherKey="questionID" Type="question" IsForeignKey="true" />
+      <Association Name="testquestion_question" Member="questions" ThisKey="questionID" OtherKey="questionID" Type="question" Cardinality="One" />
       <Association Name="test_testquestion" Member="test" ThisKey="testID" OtherKey="testID" Type="test" IsForeignKey="true" />
     </Type>
   </Table>
