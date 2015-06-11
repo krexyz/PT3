@@ -9,12 +9,29 @@ namespace PT3.BLL
 {
     public class Question
     {
-        int questionID;
-        string question;
-        string correctAnswer;
-        int marks;
+        int _questionID;
+        string _questionText;
+        string _correctAnswer;
+        int _marks;
 
-        String [] answers;
+        String[] answers;
+
+        public int questionID { get { return _questionID; } }
+        public string questionText {
+            get { return _questionText; }
+            set { _questionText = value; }
+        }
+        public string correctAnswer { 
+            get { return _correctAnswer; }
+            set { _correctAnswer = value; }
+        }
+        public int marks
+        {
+            get { return _marks; }
+            set { _marks = value; }
+        }
+
+        
 
         public Question()
         {
@@ -32,14 +49,15 @@ namespace PT3.BLL
 
             LINQ.question q = new question();
 
-            q.questionText = question;
-            q.questionAnswer = correctAnswer;
+            q.questionText = _questionText;
+            q.questionAnswer = _correctAnswer;
             q.questionType = 1;
-            q.questionMarks = marks;
+            q.questionMarks = _marks;
 
             data.questions.InsertOnSubmit(q);
             data.SubmitChanges();
 
+            _questionID = q.questionID;
         }
 
         public void addObjectiveQuestion()
@@ -49,7 +67,7 @@ namespace PT3.BLL
 
             addQuestion();
 
-            oa.questionID = questionID;
+            oa.questionID = _questionID;
             oa.AnswerA = answers[0];
             oa.AnswerB = answers[1];
             oa.AnswerC = answers[2];
@@ -58,5 +76,7 @@ namespace PT3.BLL
             data.objectiveanswers.InsertOnSubmit(oa);
             data.SubmitChanges();
         }
+
+        
     }
 }

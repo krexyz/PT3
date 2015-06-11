@@ -8,12 +8,11 @@ namespace PT3.BLL
 {
     public class Student : User
     {
-        string name;
-        int classID;
+        
 
         public override void register(string password)
         {
-            _privelage = 1;
+            _privelage = EPrivelage.Student;
             DataDataContext data = new DataDataContext();
 
             PT3.LINQ.username user = new username();
@@ -21,26 +20,47 @@ namespace PT3.BLL
 
             user.username1 = username;
             user.password = password;
-            user.privilage = privelage;
+            user.privilage = (int)privelage;
 
-            student.name = name;
+            student.name = _name;
 
             data.usernames.InsertOnSubmit(user);
             data.students.InsertOnSubmit(student);
 
             data.SubmitChanges();
+
+            _userID = user.userID;
         }
 
         public void registerClass(int classID)
         {
             DataDataContext data = new DataDataContext();
 
-            this.classID = classID;
+            _classID = classID;
 
-            LINQ.student student = data.students.Single(q => q.userID == userID);
+            LINQ.student student = data.students.Single(q => q.userID == _userID);
             student.classID = classID;
 
             data.SubmitChanges();
+        }
+
+        public override User getUser(int userID)
+        {
+            DataDataContext data = new DataDataContext();
+
+            var ab = (from a in data.students
+                     join b in data.usernames
+                     on a.userID equals b.userID
+                     where a.userID == userID
+                     select new { a, b }).First();
+
+            _userID = userID;
+            _username = ab.b.username1;
+            _privelage = (EPrivelage)ab.b.privilage;
+            _name = ab.a.name;
+            _classID = ab.a.classID;
+
+            return this;
         }
     }
 }

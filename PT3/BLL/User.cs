@@ -11,22 +11,36 @@ namespace PT3.BLL
         #region declaration
         protected int _userID;
         protected string _username;
-        protected int _privelage;
+        protected string _name;
+        protected int _classID;
+
+        protected EPrivelage _privelage;
         #endregion
 
         #region properties
         public int userID { get { return _userID; } }
-        public int privelage { get { return _privelage; } }
+        public EPrivelage privelage { get { return _privelage; } }
+        
         public string username 
-        { 
+        {
             get { return _username; } 
             set { _username = value; } 
+        }
+        public string name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+        public int classID
+        {
+            get { return _classID; }
+            set { _classID = value; }
         }
         #endregion
 
         public User()
         {
-
+            _userID = 0;
         }
 
         public User(string username)
@@ -35,7 +49,7 @@ namespace PT3.BLL
         }
 
         #region methods
-        public bool login(string password)
+        public int login(string password)
         {
             DataDataContext data = new DataDataContext();
             var login = from a in data.usernames
@@ -45,14 +59,47 @@ namespace PT3.BLL
             if (login.Count() > 0)
             {
                 _userID = (int)login.First().userID;
-                _privelage = (int)login.First().privilage;
-                return true;
+                _privelage = (EPrivelage)login.First().privilage;
+
+                return _userID;
             }
             
+            return 0;
+        }
+
+        public bool isLoggedIn()
+        {
+            if (_userID > 0)
+                return true;
+
             return false;
         }
 
-        public void register(string password)
+        public virtual User getUser()
+        {
+            DataDataContext data = new DataDataContext();
+            User user = null;
+
+            if (_privelage == EPrivelage.Student)
+            {
+                user = new Student();
+            }
+            else if (_privelage == EPrivelage.Teacher)
+            {
+                user = new Teacher();
+            }
+
+            user = user.getUser(_userID);
+            
+            return user; 
+        }
+
+        public virtual User getUser(int userID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void register(string password)
         {
             throw new NotImplementedException();
         }
