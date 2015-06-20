@@ -30,6 +30,12 @@ namespace PT3.BLL
                            where q.testID == testID
                            select q.questions;
 
+            LINQ.question q2 = (from q in data.questions
+                                where q.questionID == 3
+                                select q).Single();
+            q2.questionMarks = 20;
+            data.SubmitChanges();
+
             questions = (List<Question>)question;
         }
     }
