@@ -11,9 +11,16 @@ namespace PT3
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            int marks = (int)Session["marks"];
-            int totalMarks = (int)Session["totalMarks"];
-            Label1.Text = marks.ToString() + " / " + totalMarks.ToString() ;
+            if (Session["marks"] != null)
+            {
+                int marks = (int)Session["marks"];
+                int totalMarks = (int)Session["totalMarks"];
+                Label1.Text = marks.ToString() + " / " + totalMarks.ToString();
+            }
+            else
+            {
+                Label1.Text = "Test Not Taken. <a href=\"./TestPage.aspx\">Take Test First </a>";
+            }
         }
     }
 }

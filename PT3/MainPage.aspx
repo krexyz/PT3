@@ -4,4 +4,7 @@
         Welcome to Online test system</H2>
     <p>
         &nbsp;</p>
+<p>
+        <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/TestPage.aspx">Attemp Test</asp:HyperLink>
+</p>
 </asp:Content>
